@@ -1,0 +1,27 @@
+{
+  "name": "deimos/micro",
+  "description": "Deimos Micro.",
+  "keywords": [
+    "deimos",
+    "project",
+	"micro"
+  ],
+  "homepage": "https://github.com/DeimosProject/Micro",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "rez1dent3",
+      "email": "maksim.babichev95@gmail.com"
+    }
+  ],
+  "require": {
+    "deimos/controller": "~0.0",
+    "deimos/config": "^0.2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Deimos\\": "src/"
+    }
+  }
+}
