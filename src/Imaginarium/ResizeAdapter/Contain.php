@@ -17,9 +17,9 @@ class Contain extends AbstractDriver
     {
         $image = $this->make($path);
 
-        $_sizes = $this->coverHelper($image, $sizes, false);
+        $sizes = $this->coverHelper($image, $sizes, false);
 
-        return $this->_resize($image, $_sizes, new \ImagickPixel($color));
+        return $this->_resize($image, $sizes, new \ImagickPixel($color));
     }
 
 }

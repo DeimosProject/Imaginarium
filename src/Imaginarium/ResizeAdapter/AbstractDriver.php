@@ -104,21 +104,19 @@ abstract class AbstractDriver
 
     /**
      * @param Image $image
-     * @param array $sizes [0 => 'width', 1 => 'height']
+     * @param array $sizes
      * @param \ImagickPixel $color
      * @return Image
      */
     protected function _resize(Image $image, array $sizes, \ImagickPixel $color)
     {
-        $_sizes = $this->coverHelper($image, $sizes);
-
-        $image->resize($_sizes['width'], $_sizes['height'])
+        $image->resize($sizes['width'], $sizes['height'])
             ->resizeCanvas($sizes[0], $sizes[1], 'center', false, $color);
 
         $fill = $this->manager()
             ->canvas($sizes[0], $sizes[1], $color);
 
-        $fill->fill($image, $_sizes['shift']['width'], $_sizes['shift']['height']);
+        $fill->fill($image, $sizes['shift']['width'], $sizes['shift']['height']);
 
         return $fill;
     }

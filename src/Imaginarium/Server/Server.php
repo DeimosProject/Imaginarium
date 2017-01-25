@@ -105,9 +105,7 @@ class Server
             strpos(mime_content_type($file), 'image/') === 0
         ) {
 
-            var_dump($key);
-
-            switch ($key) { // todo: $config[type]
+            switch ($config['type']) {
                 case 'resize':
                 case 'fill':
                     $fill = new Resize();
@@ -155,8 +153,7 @@ class Server
 
             if($this->builder->helper()->dir()->make(dirname($toFile)))
             {
-
-                $image->save($toFile . '_' . $key,
+                $image->save($toFile,
                     isset($config['quality']) ? $config['quality'] : null
                 );
 
