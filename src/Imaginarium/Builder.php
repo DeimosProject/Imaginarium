@@ -29,7 +29,12 @@ class Builder extends \Deimos\Builder\Builder
      */
     public function __construct($rootDir)
     {
-        $this->rootDir = $rootDir;
+        $this->rootDir = rtrim($rootDir, '/') . '/';
+    }
+
+    public function getRootDir()
+    {
+        return $this->rootDir;
     }
 
     /**

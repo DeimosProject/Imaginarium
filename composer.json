@@ -17,7 +17,9 @@
   ],
   "require": {
     "deimos/controller": "~0.0",
-    "deimos/config": "^0.2.2"
+    "deimos/config": "^0.2.2",
+    "intervention/image": "^2.3",
+    "ext-gearman": "*"
   },
   "autoload": {
     "psr-4": {
