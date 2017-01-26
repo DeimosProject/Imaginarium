@@ -40,18 +40,24 @@ class Builder extends \Deimos\Builder\Builder
      */
     public function request()
     {
-        return $this->instance('request');
+        return $this->once(function ()
+        {
+            $request = new Request($this->helper());
+            $request->setRouter($this->router());
+
+            return $request;
+        });
     }
 
     public function buildStoragePath($user, $hash, $key = null)
     {
         $_origin = (null === $key) ? '/origin/' : ('/thumbs/' . $key . '/');
 
-        $subpath = 'storage/' . $user . $_origin .
+        $subPath = 'storage/' . $user . $_origin .
             $this->helper()->str()->sub($hash, 0, 2) . '/' .
             $this->helper()->str()->sub($hash, 2, 2);
 
-        return $this->getRootDir() . $subpath . '/' . $hash;
+        return $this->getRootDir() . $subPath . '/' . $hash;
     }
 
     /**
@@ -67,6 +73,9 @@ class Builder extends \Deimos\Builder\Builder
         }, __METHOD__);
     }
 
+    /**
+     * @return string
+     */
     public function getRootDir()
     {
         return $this->rootDir;
@@ -94,44 +103,18 @@ class Builder extends \Deimos\Builder\Builder
     }
 
     /**
-     * @return Router
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function buildRouter()
-    {
-        $resolver = $this->config()->get('resolver')->get();
-
-        $router = new Router();
-        $router->setRoutes($resolver);
-
-        return $router;
-    }
-
-    /**
      * @return Config
      */
     public function config()
     {
         return $this->once(function ()
         {
-            $rootDir = $this->rootDir;
-
-            return new Config($rootDir . 'assets/config/', $this);
+            return new Config(
+                $this->getRootDir() .
+                'assets/config/',
+                $this
+            );
         });
-    }
-
-    /**
-     * @return Request
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function buildRequest()
-    {
-        $request = new Request($this->helper());
-        $request->setRouter($this->router());
-
-        return $request;
     }
 
     /**
@@ -139,7 +122,15 @@ class Builder extends \Deimos\Builder\Builder
      */
     protected function router()
     {
-        return $this->instance('router');
+        return $this->once(function ()
+        {
+            $resolver = $this->config()->get('resolver')->get();
+
+            $router = new Router();
+            $router->setRoutes($resolver);
+
+            return $router;
+        });
     }
 
 }
