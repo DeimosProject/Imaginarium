@@ -7,17 +7,6 @@ use Intervention\Image\Image;
 class None extends AbstractDriver
 {
 
-    protected function getFillSizes(Image $fill, Image $image)
-    {
-        $x = ($fill->height() - $image->width()) / 2;
-        $y = ($fill->height() - $image->height()) / 2;
-
-        return [
-            (int)$x,
-            (int)$y
-        ];
-    }
-
     /**
      * @param string $path
      * @param array  $sizes [0 => 'width', 1 => 'height']
@@ -59,6 +48,17 @@ class None extends AbstractDriver
         $fill->fill($image, $sizes[0], $sizes[1]);
 
         return $fill;
+    }
+
+    protected function getFillSizes(Image $fill, Image $image)
+    {
+        $x = ($fill->height() - $image->width()) / 2;
+        $y = ($fill->height() - $image->height()) / 2;
+
+        return [
+            (int)$x,
+            (int)$y
+        ];
     }
 
 }

@@ -16,6 +16,28 @@ class Upload extends Controller
     protected function actionDefault()
     {
 
+        $minimal = true;
+        $width   = 300;
+        $_width  = 301;
+
+        if (!$minimal)
+        {
+            if ($minimal ^ $_width > $width)
+            {
+                var_dump(222);
+            }
+
+        }
+        else
+        {
+
+            if ((int)$_width < $width)
+            {
+                var_dump(111);
+            }
+        }
+        die;
+
         return $this->view->render('main');
 
         //

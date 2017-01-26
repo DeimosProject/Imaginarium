@@ -2,7 +2,7 @@
 
 namespace Deimos\Imaginarium\Processor;
 
-class Processor extends \Deimos\Controller\Processor
+class Processor extends \Deimos\Imaginarium\Processor
 {
 
     protected $attribute = 'runner';

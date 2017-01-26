@@ -19,30 +19,6 @@ class Upload extends Controller
     protected $hash;
 
     /**
-     * @return bool
-     */
-    protected function saveImage()
-    {
-        $path = $this->builder->buildStoragePath(
-            $this->user,
-            $this->hash
-        );
-
-        $this->helper()->file()->saveUploadedFile('file', $path);
-
-        $serverApi = new Server($this->builder);
-
-        if ($serverApi->isImage($path))
-        {
-            $serverApi->optimizationImage($path);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @return string|null
      *
      * file path: <user>/<origin|thumbs>/<size_key>/<sub_hash>/<hash>
@@ -78,6 +54,30 @@ class Upload extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function saveImage()
+    {
+        $path = $this->builder->buildStoragePath(
+            $this->user,
+            $this->hash
+        );
+
+        $this->helper()->file()->saveUploadedFile('file', $path);
+
+        $serverApi = new Server($this->builder);
+
+        if ($serverApi->isImage($path))
+        {
+            $serverApi->optimizationImage($path);
+
+            return true;
+        }
+
+        return false;
     }
 
 }

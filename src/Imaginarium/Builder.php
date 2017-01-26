@@ -35,60 +35,6 @@ class Builder extends \Deimos\Builder\Builder
         $this->rootDir = rtrim($rootDir, '/') . '/';
     }
 
-    public function getRootDir()
-    {
-        return $this->rootDir;
-    }
-
-    /**
-     * @return Helper
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function helper()
-    {
-        return $this->once(function ()
-        {
-            return new Helper($this);
-        }, __METHOD__);
-    }
-
-    /**
-     * @return Config
-     */
-    public function config()
-    {
-        return $this->once(function ()
-        {
-            $rootDir = $this->rootDir;
-
-            return new Config($rootDir . 'assets/config/', $this);
-        });
-    }
-
-    /**
-     * @return Router
-     */
-    protected function router()
-    {
-        return $this->instance('router');
-    }
-
-    /**
-     * @return Router
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function buildRouter()
-    {
-        $resolver = $this->config()->get('resolver')->get();
-
-        $router = new Router();
-        $router->setRoutes($resolver);
-
-        return $router;
-    }
-
     /**
      * @return Request
      */
@@ -109,16 +55,21 @@ class Builder extends \Deimos\Builder\Builder
     }
 
     /**
-     * @return Request
+     * @return Helper
      *
      * @throws \InvalidArgumentException
      */
-    protected function buildRequest()
+    public function helper()
     {
-        $request = new Request($this->helper());
-        $request->setRouter($this->router());
+        return $this->once(function ()
+        {
+            return new Helper($this);
+        }, __METHOD__);
+    }
 
-        return $request;
+    public function getRootDir()
+    {
+        return $this->rootDir;
     }
 
     /**
@@ -140,6 +91,55 @@ class Builder extends \Deimos\Builder\Builder
 
             return new Flow($configure);
         });
+    }
+
+    /**
+     * @return Router
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function buildRouter()
+    {
+        $resolver = $this->config()->get('resolver')->get();
+
+        $router = new Router();
+        $router->setRoutes($resolver);
+
+        return $router;
+    }
+
+    /**
+     * @return Config
+     */
+    public function config()
+    {
+        return $this->once(function ()
+        {
+            $rootDir = $this->rootDir;
+
+            return new Config($rootDir . 'assets/config/', $this);
+        });
+    }
+
+    /**
+     * @return Request
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function buildRequest()
+    {
+        $request = new Request($this->helper());
+        $request->setRouter($this->router());
+
+        return $request;
+    }
+
+    /**
+     * @return Router
+     */
+    protected function router()
+    {
+        return $this->instance('router');
     }
 
 }

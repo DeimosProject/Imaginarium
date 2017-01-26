@@ -4,7 +4,7 @@ namespace Deimos\Imaginarium\Processor\API;
 
 use Deimos\Imaginarium\Processor\API\Controller\Upload;
 
-class Processor extends \Deimos\Controller\Processor
+class Processor extends \Deimos\Imaginarium\Processor
 {
 
     /**
