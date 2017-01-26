@@ -46,7 +46,7 @@ class Builder extends \Deimos\Builder\Builder
             $request->setRouter($this->router());
 
             return $request;
-        });
+        }, __METHOD__);
     }
 
     public function buildStoragePath($user, $hash, $key = null)
@@ -99,7 +99,7 @@ class Builder extends \Deimos\Builder\Builder
             $configure->di(new Container($defaultConfig, $this->helper()));
 
             return new Flow($configure);
-        });
+        }, __METHOD__);
     }
 
     /**
@@ -114,7 +114,7 @@ class Builder extends \Deimos\Builder\Builder
                 'assets/config/',
                 $this
             );
-        });
+        }, __METHOD__);
     }
 
     /**
@@ -130,7 +130,7 @@ class Builder extends \Deimos\Builder\Builder
             $router->setRoutes($resolver);
 
             return $router;
-        });
+        }, __METHOD__);
     }
 
 }
