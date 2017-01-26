@@ -1,2 +1,38 @@
 # генерить на лету отсутствующие изображения
 # путь: user.cdn/key/hash/(name)
+
+server {
+    listen 80;
+
+    server_name localhost;
+    root "/var/www/web";
+    index index.php;
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass unix:/run/php/fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+        include fastcgi_params;
+    }
+
+    location @root {
+        rewrite "^/(.*)$" "/index.php?q=$1" last;
+    }
+
+    location / {
+        try_files $uri $uri/ @root;
+    }
+
+    # /<user>/<key>/<hash>/(FileName.jpg)
+    location /(<user>)/(<key>)/(<hash>)/.* {
+
+        root /var/www/storage;
+
+        expires 30d;
+
+        try_files $uri =404;
+
+    }
+}
