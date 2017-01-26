@@ -24,6 +24,28 @@ return [
         ]
     ],
 
+    'ux'    => [
+        'type' => 'prefix',
+        'path' => '/',
+
+        'resolver' => [
+            [
+                'type' => 'pattern',
+                'path' => '(<controller>(/<action>))',
+
+                'defaults' => [
+                    'controller' => 'upload',
+                    'action'     => 'default',
+                ]
+            ]
+        ],
+
+        'defaults' => [
+            'runner'   => 'ux',
+            'notFound' => 'default'
+        ]
+    ],
+
     // default
     'error' => [
         'type' => 'pattern',

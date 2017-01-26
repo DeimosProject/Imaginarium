@@ -3,6 +3,9 @@
 namespace Deimos\Imaginarium;
 
 use Deimos\Config\Config;
+use Deimos\Flow\Configure;
+use Deimos\Flow\DefaultConfig;
+use Deimos\Flow\Flow;
 use Deimos\Helper\Helper;
 use Deimos\Request\Request;
 use Deimos\Router\Router;
@@ -116,6 +119,27 @@ class Builder extends \Deimos\Builder\Builder
         $request->setRouter($this->router());
 
         return $request;
+    }
+
+    /**
+     * @return Flow
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function flow()
+    {
+        return $this->once(function ()
+        {
+            $configure     = new Configure();
+            $defaultConfig = new DefaultConfig();
+
+            $configure->compile($this->getRootDir() . 'assets/compile');
+            $configure->template($this->getRootDir() . 'assets/view');
+
+            $configure->di(new Container($defaultConfig, $this->helper()));
+
+            return new Flow($configure);
+        });
     }
 
 }

@@ -17,4 +17,14 @@ class Processor extends \Deimos\Controller\Processor
         return new API\Processor($this->builder);
     }
 
+    /**
+     * @return UX\Processor
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function buildUx()
+    {
+        return new UX\Processor($this->builder);
+    }
+
 }

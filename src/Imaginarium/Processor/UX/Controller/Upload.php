@@ -16,18 +16,22 @@ class Upload extends Controller
     protected function actionDefault()
     {
 
+        return $this->view->render('main');
+
         //
 
         $db = new Db();
 
         $user = 'default';
 
-        do {
+        do
+        {
 
             $hash = $this->builder->helper()->str()->random(6);
 
             $count = $db->imageExist($user, $hash);
-        } while($count);
+        }
+        while ($count);
 
         $gearman = new \GearmanClient();
         $gearman->addServer();
