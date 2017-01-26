@@ -3,7 +3,7 @@
 namespace Deimos\Imaginarium\Processor\API\Controller;
 
 use Deimos\Imaginarium\Controller;
-use Deimos\Imaginarium\Server\Db;
+use Deimos\Imaginarium\Server\Database;
 use Deimos\Imaginarium\Server\Server;
 
 class Upload extends Controller
@@ -25,7 +25,7 @@ class Upload extends Controller
      */
     protected function actionDefault()
     {
-        $db = new Db();
+        $db = new Database();
 
         $user = 'default';
 

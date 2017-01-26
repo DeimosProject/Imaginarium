@@ -2,7 +2,7 @@
 
 namespace Deimos\Imaginarium\Server;
 
-class Db
+class Database
 {
 
     protected $pdo;
