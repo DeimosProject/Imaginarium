@@ -7,9 +7,9 @@ class Database
 
     protected $pdo;
 
-    public function __construct()
+    public function __construct($rootDir)
     {
-        $this->pdo = new \PDO('sqlite:file.db');
+        $this->pdo = new \PDO('sqlite:' . $rootDir . 'file.db');
         $this->pdo->exec('CREATE TABLE IF NOT EXISTS files (id int NOT NULL AUTO_INCREMENT PRIMARY KEY,user varchar(255) NOT NULL,file varchar(16) NOT NULL);');
     }
 

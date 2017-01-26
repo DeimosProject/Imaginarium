@@ -20,7 +20,7 @@ class Upload extends Controller
 
         //
 
-        $db = new Database();
+        $db = new Database($this->builder->getRootDir());
 
         $user = 'default';
 
