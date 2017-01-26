@@ -9,6 +9,7 @@ use Deimos\Imaginarium\ResizeAdapter\Contain;
 use Deimos\Imaginarium\ResizeAdapter\Cover;
 use Deimos\Imaginarium\ResizeAdapter\None;
 use Deimos\Imaginarium\ResizeAdapter\Resize;
+use ImageOptimizer\OptimizerFactory;
 
 class Server
 {
@@ -73,9 +74,9 @@ class Server
 
             foreach ($this->config as $key => $value) {
 
-                $toFile = $this->buildPath($key);
+                $toFile = $this->builder->buildStoragePath($this->user, $this->hash, $key);
 
-                $this->resize($key, $value, $toFile);
+                $this->resize($value, $toFile);
             }
         });
 
@@ -83,27 +84,25 @@ class Server
     }
 
     /**
-     * @param string $key
      * @param array $config
      * @param string $toFile
      *
      * @return bool|null
      *
      * @link https://www.w3.org/TR/css3-images/img_scale.png
+     * @link https://github.com/psliwa/image-optimizer
      *
      * @throws ExceptionEmpty
      * @throws \InvalidArgumentException
      */
-    protected function resize($key, $config, $toFile)
+    protected function resize($config, $toFile)
     {
 
-        $file = $this->buildPath($key, true);
+        $file = $this->builder->buildStoragePath($this->user, $this->hash);
 
         $this->builder->helper()->dir()->make(dirname($file));
 
-        if (is_file($file) &&
-            strpos(mime_content_type($file), 'image/') === 0
-        ) {
+        if ($this->isImage($file)) {
 
             switch ($config['type']) {
                 case 'resize':
@@ -154,8 +153,19 @@ class Server
             if($this->builder->helper()->dir()->make(dirname($toFile)))
             {
                 $image->save($toFile,
-                    isset($config['quality']) ? $config['quality'] : null
+                    isset($config['quality']) ?
+                        $config['quality'] :
+                        null
                 );
+
+                if(!isset($config['optimization']['enable']) || $config['optimization']['enable'])
+                {
+                    $this->optimizationImage($toFile,
+                        isset($options['optimization']['options']) ?
+                        $options['optimization']['options'] :
+                        []
+                    );
+                }
 
                 return true;
             }
@@ -164,23 +174,17 @@ class Server
         return null;
     }
 
-    /**
-     * build file path: <user>/<origin|thumbs>/<size_key>/<sub_hash>/<hash>
-     *
-     * @param string $key
-     * @param bool $origin
-     *
-     * @return null|string
-     */
-    protected function buildPath($key, $origin = false)
+    public function isImage($path)
     {
-        $_origin = $origin ? '/origin/' : ('/thumbs/' . $key . '/');
+        return is_file($path) && (strpos(mime_content_type($path), 'image/') === 0);
+    }
 
-        $subpath = 'storage/' . $this->user . $_origin .
-            $this->builder->helper()->str()->sub($this->hash, 0, 2) . '/' .
-            $this->builder->helper()->str()->sub($this->hash, 2, 2);
+    public function optimizationImage($path, $options = [])
+    {
+        $factory = new OptimizerFactory($options);
+        $optimizer = $factory->get();
 
-        return $this->builder->getRootDir() . $subpath . '/' . $this->hash;
+        $optimizer->optimize($path);
     }
 
 }

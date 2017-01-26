@@ -92,14 +92,27 @@ return [
         'width' => 125,
         'height' => 300,
         'quality' => 75,
-        'color' => 'rgba(0,0,0,0)'
+        'color' => 'rgba(0,0,0,0)',
+        'optimization' => [
+            'enable' => false, // default true
+        ]
     ],
     '+contain' => [
         'type' => 'contain',
         'width' => 300,
         'height' => 125,
         'quality' => 75,
-        'color' => 'rgba(0,0,0,0)'
+        'color' => 'rgba(0,0,0,0)',
+        'optimization' => [
+            'options' => [
+                'pngquant_options' => [
+                    '--force'
+                ],
+                'pngcrush_options' => [
+                    '-reduce', '-q', '-ow'
+                ]
+            ]
+        ]
     ],
     'cover' => [
         'type' => 'cover',

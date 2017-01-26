@@ -94,6 +94,17 @@ class Builder extends \Deimos\Builder\Builder
         return $this->instance('request');
     }
 
+    public function buildStoragePath($user, $hash, $key = null)
+    {
+        $_origin = (null === $key) ? '/origin/' : ('/thumbs/' . $key . '/');
+
+        $subpath = 'storage/' . $user . $_origin .
+            $this->helper()->str()->sub($hash, 0, 2) . '/' .
+            $this->helper()->str()->sub($hash, 2, 2);
+
+        return $this->getRootDir() . $subpath . '/' . $hash;
+    }
+
     /**
      * @return Request
      *

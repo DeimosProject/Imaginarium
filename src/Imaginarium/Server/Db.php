@@ -12,14 +12,18 @@ class Db {
         $this->pdo->exec('CREATE TABLE IF NOT EXISTS files (id int NOT NULL AUTO_INCREMENT PRIMARY KEY,user varchar(255) NOT NULL,file varchar(16) NOT NULL);');
     }
 
-    public function imageExist($user, $name) {
+    public function imageExist($user, $name)
+    {
+        $statement = $this->pdo->prepare('SELECT count(id) as c FROM files WHERE user=? AND file=?');
 
-        $pdo = $this->pdo->prepare('SELECT count(id) as c WHERE user=? AND file=?', [$user, $name]);
+        $statement->execute([$user, $name]);
 
-        $pdo->execute();
+        return $statement->fetch()['c'];
+    }
 
-        return $pdo->fetch()['c'];
-
+    public function imageSaveToDb($user, $name)
+    {
+        $this->pdo->prepare('INSERT INTO files SET user=?, file=?')->execute([$user, $name]);
     }
 
 }

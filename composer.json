@@ -19,6 +19,7 @@
     "deimos/controller": "~0.0",
     "deimos/config": "^0.2.2",
     "intervention/image": "^2.3",
+    "ps/image-optimizer": "~1.0",
     "ext-gearman": "*"
   },
   "autoload": {

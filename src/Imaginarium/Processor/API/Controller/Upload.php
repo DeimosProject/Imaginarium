@@ -4,12 +4,46 @@ namespace Deimos\Imaginarium\Processor\API\Controller;
 
 use Deimos\Imaginarium\Controller;
 use Deimos\Imaginarium\Server\Db;
+use Deimos\Imaginarium\Server\Server;
 
 class Upload extends Controller
 {
 
     /**
-     * @return string
+     * @var string
+     */
+    protected $user;
+    /**
+     * @var string
+     */
+    protected $hash;
+
+    /**
+     * @return bool
+     */
+    protected function saveImage()
+    {
+        $path = $this->builder->buildStoragePath(
+            $this->user,
+            $this->hash
+        );
+
+        $this->helper()->file()->saveUploadedFile('file', $path);
+
+        $serverApi = new Server($this->builder);
+
+        if ($serverApi->isImage($path))
+        {
+            $serverApi->optimizationImage($path);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string|null
      *
      * file path: <user>/<origin|thumbs>/<size_key>/<sub_hash>/<hash>
      */
@@ -19,26 +53,31 @@ class Upload extends Controller
 
         $user = 'default';
 
-        do {
-
-            $hash = $this->builder->helper()->str()->random(6);
+        do
+        {
+            $hash = $this->helper()->str()->random(6);
 
             $count = $db->imageExist($user, $hash);
-        } while($count);
+        }
+        while ($count);
 
-//        $gearman = new \GearmanClient();
-//        $gearman->addServer();
-//
-//        foreach ($this->builder->confid()->get('resizer') as $key => $value)
-//        {
-//            $gearman->addTaskBackground('resize_' . $key, json_encode([
-//                'hash' => $hash,
-//                'user' => $user,
-//                'key' => $key
-//            ]));
-//        }
+        $this->user = $user;
+        $this->hash = $hash;
 
-        return '<h1>' . $hash . '</h1>';
+        if ($this->saveImage())
+        {
+            $gearman = new \GearmanClient();
+            $gearman->addServer();
+
+            $gearman->doBackground('resize', json_encode([
+                'hash' => $hash,
+                'user' => $user,
+            ]));
+
+            return $hash;
+        }
+
+        return null;
     }
 
 }
