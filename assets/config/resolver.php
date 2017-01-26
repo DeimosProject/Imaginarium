@@ -49,7 +49,7 @@ return [
     // default
     'error' => [
         'type' => 'pattern',
-        'path' => '/.*',
+        'path' => '/<any:.*>',
 
         'defaults' => [
             'notFound' => 'default'
