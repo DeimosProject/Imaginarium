@@ -3,7 +3,7 @@
 namespace Deimos\Imaginarium\Processor\API\Controller;
 
 use Deimos\Imaginarium\Controller;
-use Deimos\Imaginarium\Server\Db;
+use Deimos\Imaginarium\Server\Database;
 use Deimos\Imaginarium\Server\Server;
 
 class Upload extends Controller
@@ -19,37 +19,13 @@ class Upload extends Controller
     protected $hash;
 
     /**
-     * @return bool
-     */
-    protected function saveImage()
-    {
-        $path = $this->builder->buildStoragePath(
-            $this->user,
-            $this->hash
-        );
-
-        $this->helper()->file()->saveUploadedFile('file', $path);
-
-        $serverApi = new Server($this->builder);
-
-        if ($serverApi->isImage($path))
-        {
-            $serverApi->optimizationImage($path);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @return string|null
      *
      * file path: <user>/<origin|thumbs>/<size_key>/<sub_hash>/<hash>
      */
     protected function actionDefault()
     {
-        $db = new Db();
+        $db = new Database($this->builder->getRootDir());
 
         $user = 'default';
 
@@ -78,6 +54,30 @@ class Upload extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function saveImage()
+    {
+        $path = $this->builder->buildStoragePath(
+            $this->user,
+            $this->hash
+        );
+
+        $this->helper()->file()->saveUploadedFile('file', $path);
+
+        $serverApi = new Server($this->builder);
+
+        if ($serverApi->isImage($path))
+        {
+            $serverApi->optimizationImage($path);
+
+            return true;
+        }
+
+        return false;
     }
 
 }

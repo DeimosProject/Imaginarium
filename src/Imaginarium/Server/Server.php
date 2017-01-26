@@ -72,7 +72,8 @@ class Server
              */
             $this->config = $this->builder->config()->get('resizer');
 
-            foreach ($this->config as $key => $value) {
+            foreach ($this->config as $key => $value)
+            {
 
                 $toFile = $this->builder->buildStoragePath($this->user, $this->hash, $key);
 
@@ -80,11 +81,13 @@ class Server
             }
         });
 
-        while ($this->worker->work()) {}
+        while ($this->worker->work())
+        {
+        }
     }
 
     /**
-     * @param array $config
+     * @param array  $config
      * @param string $toFile
      *
      * @return bool|null
@@ -102,14 +105,16 @@ class Server
 
         $this->builder->helper()->dir()->make(dirname($file));
 
-        if ($this->isImage($file)) {
+        if ($this->isImage($file))
+        {
 
-            switch ($config['type']) {
+            switch ($config['type'])
+            {
                 case 'resize':
                 case 'fill':
                     $fill = new Resize();
                     $fill->setDriver($this->driver);
-                    $image = $fill->execute($file,[
+                    $image = $fill->execute($file, [
                         $config['width'],
                         $config['height'],
                     ]);
@@ -150,7 +155,7 @@ class Server
                     return false;
             }
 
-            if($this->builder->helper()->dir()->make(dirname($toFile)))
+            if ($this->builder->helper()->dir()->make(dirname($toFile)))
             {
                 $image->save($toFile,
                     isset($config['quality']) ?
@@ -158,12 +163,12 @@ class Server
                         null
                 );
 
-                if(!isset($config['optimization']['enable']) || $config['optimization']['enable'])
+                if (!isset($config['optimization']['enable']) || $config['optimization']['enable'])
                 {
                     $this->optimizationImage($toFile,
                         isset($options['optimization']['options']) ?
-                        $options['optimization']['options'] :
-                        []
+                            $options['optimization']['options'] :
+                            []
                     );
                 }
 
@@ -181,7 +186,7 @@ class Server
 
     public function optimizationImage($path, $options = [])
     {
-        $factory = new OptimizerFactory($options);
+        $factory   = new OptimizerFactory($options);
         $optimizer = $factory->get();
 
         $optimizer->optimize($path);

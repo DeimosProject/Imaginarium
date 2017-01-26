@@ -29,19 +29,6 @@ class Project
     }
 
     /**
-     * @return Builder
-     */
-    protected function builder()
-    {
-        if (!$this->builder)
-        {
-            $this->builder = new Builder($this->rootDir);
-        }
-
-        return $this->builder;
-    }
-
-    /**
      * @return string
      *
      * @throws \Deimos\Controller\Exceptions\NotFound
@@ -64,6 +51,19 @@ class Project
 
             return $error->execute();
         }
+    }
+
+    /**
+     * @return Builder
+     */
+    protected function builder()
+    {
+        if (!$this->builder)
+        {
+            $this->builder = new Builder($this->rootDir);
+        }
+
+        return $this->builder;
     }
 
 }

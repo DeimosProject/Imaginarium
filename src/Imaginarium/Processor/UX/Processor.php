@@ -8,7 +8,7 @@ namespace Deimos\Imaginarium\Processor\UX;
 
 use Deimos\Imaginarium\Processor\UX\Controller\Upload;
 
-class Processor extends \Deimos\Controller\Processor
+class Processor extends \Deimos\Imaginarium\Processor
 {
 
     /**
