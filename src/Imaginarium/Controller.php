@@ -8,7 +8,7 @@ class Controller extends \Deimos\Controller\Controller
 {
 
     /**
-     * @var \Deimos\Imaginarium\Builder
+     * @var Builder
      */
     protected $builder;
 
