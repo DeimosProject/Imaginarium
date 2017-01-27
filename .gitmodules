@@ -1,0 +1,3 @@
+[submodule "web/js/FileAPI"]
+	path = web/js/FileAPI
+	url = https://github.com/mailru/FileAPI.git

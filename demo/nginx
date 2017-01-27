@@ -1,5 +1,5 @@
 # генерить на лету отсутствующие изображения
-# путь: user.cdn/key/hash/(name)
+# путь: cdn/user/key/hash/(name)
 
 server {
     listen 80;
@@ -26,11 +26,19 @@ server {
     }
 
     # /<user>/<key>/<hash>/(FileName.jpg)
-    location /(<user>)/(<key>)/(<hash>)/.* {
+    location /(<user>+)/(<key>+)/(<hash>+)/.* {
 
-        root /var/www/storage;
+        rewrite /(<user>+)/(<key>+)/(<h1>{2})(<h2>{2})(<hash>+)/.* /storage/$user/$key/$h1/$h2/$h1$h2$hash last;
+
+    }
+
+    location /storage/(<user>+)/(<key>+)/(<h1>+)/(<h2>+)/(<hash>+) {
+
+        root /var/www;
 
         expires 30d;
+
+        internal;
 
         try_files $uri =404;
 
