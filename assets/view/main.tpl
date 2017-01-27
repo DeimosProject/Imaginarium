@@ -28,19 +28,39 @@
                 </div>
             </div>
         </section>
+        <div id="popup" class="popup" style="display: none;">
+            <div class="popup__body"><div class="js-img"></div></div>
+            <div style="margin: 0 0 5px; text-align: center;">
+                <div class="js-upload btn btn_browse btn_browse_small">Upload</div>
+            </div>
+        </div>
 
         {literal}
+            <link href="/css/jquery.Jcrop.min.css" rel="stylesheet">
+            <script>
+                var FileAPI = {
+                    debug: true
+                    , media: true
+                    , staticPath: '/js/FileAPI/'
+                };
+            </script>
+            <script src="/js/jquery-2.2.4.min.js"></script>
+            <script src="/js/FileAPI.min.js"></script>
+            <script src="/js/FileAPI.exif.js"></script>
+            <script src="/js/jquery.fileapi.js"></script>
+            <script src="/js/jquery.Jcrop.min.js"></script>
+            <script src="/js/jquery.modal.js"></script>
             <script>
                 $('#userpic').fileapi({
-                    url: 'http://rubaxa.org/FileAPI/server/ctrl.php',
+                    url: '/api/upload',
                     accept: 'image/*',
-                    imageSize: { minWidth: 200, minHeight: 200 },
+                    imageSize: { minWidth: 304, minHeight: 304 },
                     elements: {
                         active: { show: '.js-upload', hide: '.js-browse' },
                         preview: {
                             el: '.js-preview',
-                            width: 200,
-                            height: 200
+                            width: 304,
+                            height: 304
                         },
                         progress: '.js-progress'
                     },
@@ -62,11 +82,11 @@
                                         file: file,
                                         bgColor: '#fff',
                                         maxSize: [$(window).width()-100, $(window).height()-100],
-                                        minSize: [200, 200],
-                                        selection: '90%',
-//                                        onSelect: function (coords){
-//                                            $('#userpic').fileapi('crop', file, coords);
-//                                        }
+//                                        minSize: ['10%', '10%'],
+//                                        selection: '90%',
+                                        onSelect: function (coords){
+                                            $('#userpic').fileapi('crop', file, coords);
+                                        }
                                     });
                                 }
                             }).open();

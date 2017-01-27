@@ -10,7 +10,7 @@ class Database
     public function __construct($rootDir)
     {
         $this->pdo = new \PDO('sqlite:' . $rootDir . 'file.db');
-        $this->pdo->exec('CREATE TABLE IF NOT EXISTS files (id int NOT NULL AUTO_INCREMENT PRIMARY KEY,user varchar(255) NOT NULL,file varchar(16) NOT NULL);');
+        $this->pdo->exec('CREATE TABLE IF NOT EXISTS files (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,user TEXT NOT NULL,file TEXT NOT NULL);');
     }
 
     public function imageExist($user, $name)
@@ -24,7 +24,7 @@ class Database
 
     public function imageSaveToDb($user, $name)
     {
-        $this->pdo->prepare('INSERT INTO files SET user=?, file=?')->execute([$user, $name]);
+        $this->pdo->prepare('INSERT INTO files (user, file) VALUES (?, ?)')->execute([$user, $name]);
     }
 
 }

@@ -50,6 +50,8 @@ class Upload extends Controller
                 'user' => $user,
             ]));
 
+            $db->imageSaveToDb($user, $hash);
+
             return $hash;
         }
 
@@ -66,15 +68,22 @@ class Upload extends Controller
             $this->hash
         );
 
-        $this->helper()->file()->saveUploadedFile('file', $path);
+        $this->helper()->dir()->make(dirname($path));
 
-        $serverApi = new Server($this->builder);
+        $result = $this->helper()->uploads()->simple('filedata')->save($path);
 
-        if ($serverApi->isImage($path))
+        if ($result)
         {
-            $serverApi->optimizationImage($path);
 
-            return true;
+            $serverApi = new Server($this->builder);
+
+            if ($serverApi->isImage($path))
+            {
+                $serverApi->optimizationImage($path);
+
+                return true;
+            }
+
         }
 
         return false;
