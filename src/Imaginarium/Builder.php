@@ -49,6 +49,14 @@ class Builder extends \Deimos\Builder\Builder
         }, __METHOD__);
     }
 
+    /**
+     * @deprecated use \Deimos\ImaginariumSDK\SDK
+     *
+     * @param $user
+     * @param $hash
+     * @param null $key
+     * @return string
+     */
     public function buildStoragePath($user, $hash, $key = null)
     {
         $_origin = (null === $key) ? '/origin/' : ('/thumbs/' . $key . '/');

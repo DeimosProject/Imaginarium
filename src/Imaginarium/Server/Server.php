@@ -10,6 +10,7 @@ use Deimos\Imaginarium\ResizeAdapter\Cover;
 use Deimos\Imaginarium\ResizeAdapter\None;
 use Deimos\Imaginarium\ResizeAdapter\Resize;
 use ImageOptimizer\OptimizerFactory;
+use Deimos\ImaginariumSDK\SDK;
 
 class Server
 {
@@ -38,6 +39,11 @@ class Server
      * @var ConfigObject
      */
     protected $config;
+
+    /**
+     * @var SDK
+     */
+    protected $sdk;
 
     /**
      * @param $builder Builder
@@ -72,10 +78,18 @@ class Server
              */
             $this->config = $this->builder->config()->get('resizer');
 
+            if(!$this->sdk) {
+
+                $this->sdk = new SDK();
+            }
+
+            $this->sdk->setBasedir($this->builder->getRootDir() . 'storage/');
+            $this->sdk->setUserName($this->user);
+            $this->sdk->setServer('localhost');
+
             foreach ($this->config as $key => $value)
             {
-
-                $toFile = $this->builder->buildStoragePath($this->user, $this->hash, $key);
+                $toFile = $this->sdk->getThumbsPath($key, $this->hash);
 
                 $this->resize($value, $toFile);
             }
@@ -100,8 +114,8 @@ class Server
      */
     protected function resize($config, $toFile)
     {
-
         $file = $this->builder->buildStoragePath($this->user, $this->hash);
+        $file = $this->sdk->getOriginalPath($this->hash);
 
         $this->builder->helper()->dir()->make(dirname($file));
 
