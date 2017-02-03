@@ -5,6 +5,7 @@ namespace Deimos\Imaginarium\Processor\API\Controller;
 use Deimos\Imaginarium\Controller;
 use Deimos\Imaginarium\Server\Database;
 use Deimos\Imaginarium\Server\Server;
+use Deimos\ImaginariumSDK\SDK;
 
 class Upload extends Controller
 {
@@ -63,10 +64,10 @@ class Upload extends Controller
      */
     protected function saveImage()
     {
-        $path = $this->builder->buildStoragePath(
-            $this->user,
-            $this->hash
-        );
+        $sdk = new SDK();
+        $sdk->setUserName($this->user);
+        $sdk->setBasedir($this->builder->getRootDir() . 'storage');
+        $path = $sdk->getOriginalPath($this->hash);
 
         $this->helper()->dir()->make(dirname($path));
 
@@ -74,7 +75,6 @@ class Upload extends Controller
 
         if ($result)
         {
-
             $serverApi = new Server($this->builder);
 
             if ($serverApi->isImage($path))
@@ -83,7 +83,6 @@ class Upload extends Controller
 
                 return true;
             }
-
         }
 
         return false;
