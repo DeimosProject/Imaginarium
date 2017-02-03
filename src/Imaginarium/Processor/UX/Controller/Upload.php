@@ -17,31 +17,6 @@ class Upload extends Controller
     {
 
         return $this->view->render('main');
-
-        //
-
-        $db = new Database($this->builder->getRootDir());
-
-        $user = 'default';
-
-        do
-        {
-
-            $hash = $this->builder->helper()->str()->random(6);
-
-            $count = $db->imageExist($user, $hash);
-        }
-        while ($count);
-
-        $gearman = new \GearmanClient();
-        $gearman->addServer();
-
-//        $gearman->doBackground('resize', json_encode([
-//            'hash' => $hash,
-//            'user' => $user,
-//        ]));
-
-        return '<h1>' . $hash . '</h1>';
     }
 
 }

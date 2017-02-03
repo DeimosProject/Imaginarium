@@ -5,3 +5,5 @@ composer.lock
 build/
 storage/
 assets/compile/
+assets/config/resizer.php
+file.db
