@@ -2,7 +2,7 @@
 
 ```sh
 sudo aptitude install php-gearman gearman gearman-job-server gearman-server
-apt install libjpeg-progs pngquant optipng gifsicle pngcrush 
+sudo aptitude install libjpeg-progs pngquant optipng gifsicle pngcrush 
 ```
 
 **RedHat**
