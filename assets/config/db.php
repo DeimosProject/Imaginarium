@@ -2,5 +2,6 @@
 
 return [
     'adapter'  => 'sqlite',
-    'path'    => dirname(dirname(__DIR__)) . '/file.db',
+    'path'    => ':memory:'
+//    'path'    => dirname(dirname(__DIR__)) . '/file.db',
 ];

@@ -32,7 +32,7 @@ class Database
     public function imageSaveToDb($user, $name)
     {
         $this->builder->orm()
-            ->create('file', ['user' => $user, 'file', $name]);
+            ->create('file', ['user' => $user, 'file' => $name]);
     }
 
 }
