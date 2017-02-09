@@ -3,10 +3,12 @@
 namespace Deimos\Imaginarium;
 
 use Deimos\Config\Config;
+use Deimos\Database\Database;
 use Deimos\Flow\Configure;
 use Deimos\Flow\DefaultConfig;
 use Deimos\Flow\Flow;
 use Deimos\Helper\Helper;
+use Deimos\ORM\ORM;
 use Deimos\Request\Request;
 use Deimos\Router\Router;
 
@@ -138,6 +140,31 @@ class Builder extends \Deimos\Builder\Builder
             $router->setRoutes($resolver);
 
             return $router;
+        }, __METHOD__);
+    }
+
+    /**
+     * @return Database
+     */
+    public function database()
+    {
+        return $this->once(function ()
+        {
+            return new Database($this->config()->get('db'));
+        }, __METHOD__);
+    }
+
+    /**
+     * @return ORM
+     */
+    public function orm()
+    {
+        return $this->once(function ()
+        {
+            $orm = new ORM($this, $this->database());
+            $orm->setConfig($this->config()->get('orm')->get());
+
+            return $orm;
         }, __METHOD__);
     }
 

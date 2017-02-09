@@ -26,7 +26,7 @@ class Upload extends Controller
      */
     protected function actionDefault()
     {
-        $db = new Database($this->builder->getRootDir());
+        $db = new Database($this->builder);
 
         $user = 'default';
 

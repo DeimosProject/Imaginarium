@@ -2,29 +2,37 @@
 
 namespace Deimos\Imaginarium\Server;
 
+use Deimos\Imaginarium\Builder;
+
 class Database
 {
 
-    protected $pdo;
+    /**
+     * @var Builder
+     */
+    protected $builder;
 
-    public function __construct($rootDir)
+    public function __construct(Builder $builder)
     {
-        $this->pdo = new \PDO('sqlite:' . $rootDir . 'file.db');
-        $this->pdo->exec('CREATE TABLE IF NOT EXISTS files (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,user TEXT NOT NULL,file TEXT NOT NULL);');
+        $q = 'CREATE TABLE IF NOT EXISTS files (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,user TEXT NOT NULL,file TEXT NOT NULL);';
+        $this->builder = $builder;
+
+        $this->builder->database()->exec($q);
     }
 
     public function imageExist($user, $name)
     {
-        $statement = $this->pdo->prepare('SELECT count(id) as c FROM files WHERE user=? AND file=?');
-
-        $statement->execute([$user, $name]);
-
-        return $statement->fetch()['c'];
+        return $this->builder->orm()
+            ->repository('file')
+            ->where('user', $user)
+            ->where('name', $name)
+            ->count();
     }
 
     public function imageSaveToDb($user, $name)
     {
-        $this->pdo->prepare('INSERT INTO files (user, file) VALUES (?, ?)')->execute([$user, $name]);
+        $this->builder->orm()
+            ->create('file', ['user' => $user, 'file', $name]);
     }
 
 }
