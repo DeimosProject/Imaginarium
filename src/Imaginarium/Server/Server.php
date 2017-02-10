@@ -15,6 +15,9 @@ use Deimos\ImaginariumSDK\SDK;
 class Server
 {
 
+    const STATUS_OK    = 0;
+    const STATUS_ERROR = 1;
+
     /**
      * @var Builder
      */
@@ -46,13 +49,15 @@ class Server
     protected $sdk;
 
     /**
-     * @param $builder Builder
+     * @param        $builder Builder
+     * @param string $user
      */
-    public function __construct(Builder $builder)
+    public function __construct(Builder $builder, $user)
     {
         $this->worker = new \GearmanWorker();
         $this->worker->addServer();
         $this->builder = $builder;
+        $this->user    = $user;
     }
 
     /**
@@ -62,24 +67,28 @@ class Server
     {
         $this->worker->addFunction('resize' . $subName, function (\GearmanJob $job)
         {
-
-            $this->driver = $this->builder->config()->get('image_driver')->get('driver');
+            $this->driver = $this->builder->config()
+                ->get('image_driver')->get('driver');
 
             /**
              * @var array
              */
             $params = (array)json_decode($job->workload());
 
-            $this->user = $params['user'];
             $this->hash = $params['hash'];
+
+            $config = $this->builder
+                ->config()
+                ->get('resizer')
+                ->get($this->user);
 
             /**
              * @var ConfigObject
              */
-            $this->config = $this->builder->config()->get('resizer');
+            $this->config = $config;
 
-            if(!$this->sdk) {
-
+            if (!$this->sdk)
+            {
                 $this->sdk = new SDK();
             }
 
@@ -87,12 +96,27 @@ class Server
             $this->sdk->setUserName($this->user);
             $this->sdk->setServer('localhost');
 
-            foreach ($this->config as $key => $value)
-            {
-                $toFile = $this->sdk->getThumbsPath($key, $this->hash);
+            $callback = isset($config['callback']) ? $config['callback'] : [];
 
-                $this->resize($value, $toFile);
+            try
+            {
+                foreach ($this->config as $key => $value)
+                {
+                    $toFile = $this->sdk->getThumbsPath($key, $this->hash);
+
+                    $this->resize($value, $toFile);
+                }
             }
+            catch (\Exception $e)
+            {
+                $this->sendCallback(self::STATUS_ERROR, $callback);
+
+                return false;
+            }
+
+            $this->sendCallback(self::STATUS_OK, $callback);
+
+            return true;
         });
 
         while ($this->worker->work())
@@ -114,14 +138,12 @@ class Server
      */
     protected function resize($config, $toFile)
     {
-        $file = $this->builder->buildStoragePath($this->user, $this->hash);
         $file = $this->sdk->getOriginalPath($this->hash);
 
         $this->builder->helper()->dir()->make(dirname($file));
 
         if ($this->isImage($file))
         {
-
             switch ($config['type'])
             {
                 case 'resize':
@@ -193,17 +215,67 @@ class Server
         return null;
     }
 
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
     public function isImage($path)
     {
         return is_file($path) && (strpos(mime_content_type($path), 'image/') === 0);
     }
 
-    public function optimizationImage($path, $options = [])
+    /**
+     * @param string $path
+     *
+     * @param array  $options
+     */
+    public function optimizationImage($path, array $options = [])
     {
         $factory   = new OptimizerFactory($options);
         $optimizer = $factory->get();
 
         $optimizer->optimize($path);
+    }
+
+    /**
+     * @param int   $status
+     * @param array $callbackConfig
+     */
+    protected function sendCallback($status, array $callbackConfig)
+    {
+        if (empty($callbackConfig))
+        {
+            return;
+        }
+        if ($status === self::STATUS_ERROR)
+        {
+            $result = [
+                'status' => 'error'
+            ];
+        }
+        // todo: слать 100500 раз, пока нам не пришлютЪ ОК
+        if ($status === self::STATUS_OK)
+        {
+            $result = [
+                'status' => 'ok',
+                'sizes' => [
+                    'width' => 0,
+                    'height' => 0,
+                ],
+                //'' // more data
+            ];
+        }
+
+        if (isset($result))
+        {
+            $this->builder->helper()
+                ->send()
+                ->data($result)
+                ->method('POST')
+                ->to($callbackConfig['url'] . '?hash=' . $callbackConfig['secret'])
+                ->exec();
+        }
     }
 
 }

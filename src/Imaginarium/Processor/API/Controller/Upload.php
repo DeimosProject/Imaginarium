@@ -75,7 +75,7 @@ class Upload extends Controller
 
         if ($result)
         {
-            $serverApi = new Server($this->builder);
+            $serverApi = new Server($this->builder, $this->user);
 
             if ($serverApi->isImage($path))
             {
