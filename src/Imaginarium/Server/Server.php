@@ -272,12 +272,17 @@ class Server
 
         if (isset($result))
         {
-            $this->builder->helper()
-                ->send()
-                ->data($result)
-                ->method('POST')
-                ->to($callbackConfig['url'] . '?hash=' . $callbackConfig['secret'])
-                ->exec();
+            try {
+
+                $this->builder->helper()
+                    ->send()
+                    ->data($result)
+                    ->method('POST')
+                    ->to($callbackConfig['url'] . '?hash=' . $callbackConfig['secret'])
+                    ->exec();
+            } catch (\Exception $e) {
+                var_dump($e->getMessage());
+            }
         }
     }
 
