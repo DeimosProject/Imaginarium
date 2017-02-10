@@ -196,11 +196,13 @@ class Server
 
             if ($this->builder->helper()->dir()->make(dirname($toFile)))
             {
-                $image->save($toFile,
+                $image->save($toFile . '.png',
                     isset($config['quality']) ?
                         $config['quality'] :
                         null
                 );
+
+                rename($toFile.'.png', $toFile);
 
                 if (!isset($config['optimization']['enable']) || $config['optimization']['enable'])
                 {
