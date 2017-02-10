@@ -102,9 +102,12 @@ class Server
             {
                 foreach ($this->config as $key => $value)
                 {
-                    $toFile = $this->sdk->getThumbsPath($key, $this->hash);
+                    if($key !== 'callback')
+                    {
+                        $toFile = $this->sdk->getThumbsPath($key, $this->hash);
 
-                    $this->resize($value, $toFile);
+                        $this->resize($value, $toFile);
+                    }
                 }
             }
             catch (\Exception $e)
