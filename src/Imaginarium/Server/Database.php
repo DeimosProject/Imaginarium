@@ -12,27 +12,67 @@ class Database
      */
     protected $builder;
 
+    /**
+     * Database constructor.
+     *
+     * @param Builder $builder
+     */
     public function __construct(Builder $builder)
     {
-        $q = 'CREATE TABLE IF NOT EXISTS files (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,user TEXT NOT NULL,name TEXT NOT NULL);';
-        $this->builder = $builder;
+        $database     = $builder->database();
+        $queryBuilder = $database->queryBuilder();
 
-        $this->builder->database()->exec($q);
+        if ($queryBuilder->adapter()->name() === 'sqlite')
+        {
+            $q = 'CREATE TABLE IF NOT EXISTS files (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                user TEXT NOT NULL,
+                name TEXT NOT NULL
+            );';
+
+            $database->exec($q);
+        }
+
+        $this->builder = $builder;
     }
 
+    /**
+     * @return \Deimos\ORM\ORM
+     */
+    protected function orm()
+    {
+        return $this->builder->orm();
+    }
+
+    /**
+     * @param $user
+     * @param $name
+     *
+     * @return int
+     */
     public function imageExist($user, $name)
     {
-        return $this->builder->orm()
-            ->repository('file')
+        return $this->orm()->repository('file')
             ->where('user', $user)
             ->where('name', $name)
             ->count();
     }
 
+    /**
+     * @param $user
+     * @param $name
+     *
+     * @return \Deimos\ORM\Entity
+     *
+     * @throws \Deimos\ORM\Exceptions\ModelNotLoad
+     * @throws \Deimos\ORM\Exceptions\ModelNotModify
+     */
     public function imageSaveToDb($user, $name)
     {
-        $this->builder->orm()
-            ->create('file', ['user' => $user, 'name' => $name]);
+        return $this->orm()->create('file', [
+            'user' => $user,
+            'name' => $name
+        ]);
     }
 
 }

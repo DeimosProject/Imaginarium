@@ -6,7 +6,6 @@ use Deimos\Imaginarium\Controller;
 use Deimos\Imaginarium\Server\Database;
 use Deimos\Imaginarium\Server\Server;
 use Deimos\ImaginariumSDK\SDK;
-use Deimos\Request\Request;
 
 class Upload extends Controller
 {
@@ -15,6 +14,7 @@ class Upload extends Controller
      * @var string
      */
     protected $user;
+
     /**
      * @var string
      */

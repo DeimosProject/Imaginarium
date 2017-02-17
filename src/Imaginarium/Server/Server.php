@@ -9,8 +9,8 @@ use Deimos\Imaginarium\ResizeAdapter\Contain;
 use Deimos\Imaginarium\ResizeAdapter\Cover;
 use Deimos\Imaginarium\ResizeAdapter\None;
 use Deimos\Imaginarium\ResizeAdapter\Resize;
-use ImageOptimizer\OptimizerFactory;
 use Deimos\ImaginariumSDK\SDK;
+use ImageOptimizer\OptimizerFactory;
 
 class Server
 {
@@ -22,22 +22,27 @@ class Server
      * @var Builder
      */
     protected $builder;
+
     /**
      * @var string
      */
     protected $driver;
+
     /**
      * @var string
      */
     protected $hash;
+
     /**
      * @var string
      */
     protected $user;
+
     /**
      * @var \GearmanWorker
      */
     protected $worker;
+
     /**
      * @var ConfigObject
      */
@@ -54,10 +59,11 @@ class Server
      */
     public function __construct(Builder $builder, $user)
     {
-        $this->worker = new \GearmanWorker();
-        $this->worker->addServer();
+        $this->worker  = new \GearmanWorker();
         $this->builder = $builder;
         $this->user    = $user;
+
+        $this->worker->addServer();
     }
 
     /**
@@ -67,8 +73,9 @@ class Server
     {
         $this->worker->addFunction('resize' . $subName, function (\GearmanJob $job)
         {
+
             $this->driver = $this->builder->config()
-                ->get('image_driver')->get('driver');
+                ->get('imageDriver:driver');
 
             /**
              * @var array
@@ -77,8 +84,7 @@ class Server
 
             $this->hash = $params['hash'];
 
-            $config = $this->builder
-                ->config()
+            $config = $this->builder->config()
                 ->get('resizer')
                 ->get($this->user);
 
@@ -102,12 +108,13 @@ class Server
             {
                 foreach ($this->config as $key => $value)
                 {
-                    if($key !== 'callback')
+                    if ($key === 'callback')
                     {
-                        $toFile = $this->sdk->getThumbsPath($key, $this->hash);
-
-                        $this->resize($value, $toFile);
+                        continue;
                     }
+
+                    $toFile = $this->sdk->getThumbsPath($key, $this->hash);
+                    $this->resize($value, $toFile);
                 }
             }
             catch (\Exception $e)
@@ -125,6 +132,7 @@ class Server
         while ($this->worker->work())
         {
         }
+
     }
 
     /**
@@ -158,6 +166,7 @@ class Server
                         $config['height'],
                     ]);
                     break;
+
                 case 'none':
                     $fill = new None();
                     $fill->setDriver($this->driver);
@@ -169,6 +178,7 @@ class Server
                         $config['color'] ?? '#ffffff'
                     );
                     break;
+
                 case 'contain':
                     $fill = new Contain();
                     $fill->setDriver($this->driver);
@@ -180,6 +190,7 @@ class Server
                         $config['color'] ?? '#ffffff'
                     );
                     break;
+
                 case 'cover':
                     $fill = new Cover();
                     $fill->setDriver($this->driver);
@@ -190,26 +201,24 @@ class Server
                         ]
                     );
                     break;
+
                 default:
-                    return false;
+                    throw new \InvalidArgumentException('Type `' . $config['type'] . '` not found');
+
             }
 
             if ($this->builder->helper()->dir()->make(dirname($toFile)))
             {
                 // Imagick hack
-                $image->save($toFile . '.png',
-                    isset($config['quality']) ?
-                        $config['quality'] :
-                        null
-                );
-                rename($toFile.'.png', $toFile);
+                $image->save($toFile . '.png', $config['quality'] ?? null);
+
+                rename($toFile . '.png', $toFile);
 
                 if (!isset($config['optimization']['enable']) || $config['optimization']['enable'])
                 {
                     $this->optimizationImage($toFile,
                         isset($options['optimization']['options']) ?
-                            $options['optimization']['options'] :
-                            []
+                            $options['optimization']['options'] : []
                     );
                 }
 
@@ -253,6 +262,7 @@ class Server
         {
             return;
         }
+
         if ($status === self::STATUS_ERROR)
         {
             $result = [
@@ -262,33 +272,35 @@ class Server
 
         if ($status === self::STATUS_OK)
         {
-            $file = $this->sdk->getOriginalPath($this->hash);
+            $file  = $this->sdk->getOriginalPath($this->hash);
             $sizes = getimagesize($file, $info);
 
             $result = [
-                'status' => 'ok',
+                'status'   => 'ok',
                 'fileSize' => $this->builder->helper()->file()->size($file),
-                'sizes' => [
-                    'width' => $sizes[0],
+                'sizes'    => [
+                    'width'  => $sizes[0],
                     'height' => $sizes[1],
                 ],
-                'user' => $this->user,
-                'mime' => $sizes['mime'] ?? '',
+                'user'     => $this->user,
+                'mime'     => $sizes['mime'] ?? '',
                 'channels' => $sizes['channels'] ?? '',
             ];
         }
 
         if (isset($result))
         {
-            try {
-
+            try
+            {
                 $this->builder->helper()
                     ->send()
                     ->data($result)
                     ->method('POST')
                     ->to($callbackConfig['url'] . '?hash=' . $callbackConfig['secret'])
                     ->exec();
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e)
+            {
                 var_dump($e->getMessage());
             }
         }

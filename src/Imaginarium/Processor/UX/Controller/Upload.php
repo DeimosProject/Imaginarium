@@ -3,7 +3,6 @@
 namespace Deimos\Imaginarium\Processor\UX\Controller;
 
 use Deimos\Imaginarium\Controller;
-use Deimos\Imaginarium\Server\Database;
 
 class Upload extends Controller
 {
