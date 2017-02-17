@@ -48,13 +48,17 @@ class Upload extends Controller
             $gearman->addServer();
 
             $gearman->doBackground('resize', json_encode([
-                'hash' => $hash,
-                'user' => $user,
+                'hash'  => $hash,
+                'user'  => $user,
+                'data'  => $this->request()->data(),
+                'query' => $this->request()->query()
             ]));
 
             $db->imageSaveToDb($user, $hash);
 
-            return $hash;
+            return [
+                'hash' => $hash
+            ];
         }
 
         return [

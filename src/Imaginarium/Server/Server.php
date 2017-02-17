@@ -102,7 +102,7 @@ class Server
             $this->sdk->setUserName($this->user);
             $this->sdk->setServer('localhost');
 
-            $callback = isset($config['callback']) ? $config['callback'] : [];
+            $callback = $config['callback'] ?? [];
 
             try
             {
@@ -119,12 +119,12 @@ class Server
             }
             catch (\Exception $e)
             {
-                $this->sendCallback(self::STATUS_ERROR, $callback);
+                $this->sendCallback(self::STATUS_ERROR, $callback, $params);
 
                 return false;
             }
 
-            $this->sendCallback(self::STATUS_OK, $callback);
+            $this->sendCallback(self::STATUS_OK, $callback, $params);
 
             return true;
         });
@@ -255,8 +255,9 @@ class Server
     /**
      * @param int   $status
      * @param array $callbackConfig
+     * @param array $params
      */
-    protected function sendCallback($status, array $callbackConfig)
+    protected function sendCallback($status, array $callbackConfig, array $params)
     {
         if (empty($callbackConfig))
         {
@@ -275,18 +276,16 @@ class Server
             $file  = $this->sdk->getOriginalPath($this->hash);
             $sizes = getimagesize($file, $info);
 
-            $result = [
+            $result = array_merge([
                 'status'   => 'ok',
                 'fileSize' => $this->builder->helper()->file()->size($file),
                 'sizes'    => [
                     'width'  => $sizes[0],
                     'height' => $sizes[1],
                 ],
-                'hash'     => $this->hash,
-                'user'     => $this->user,
                 'mime'     => $sizes['mime'] ?? '',
                 'channels' => $sizes['channels'] ?? '',
-            ];
+            ], $params);
         }
 
         if (isset($result))
@@ -302,7 +301,7 @@ class Server
             }
             catch (\Exception $e)
             {
-                var_dump($e->getMessage());
+                echo $e->getMessage(), PHP_EOL;
             }
         }
     }

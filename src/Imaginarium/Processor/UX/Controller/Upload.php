@@ -14,7 +14,6 @@ class Upload extends Controller
      */
     protected function actionDefault()
     {
-
         return $this->view->render('main');
     }
 
