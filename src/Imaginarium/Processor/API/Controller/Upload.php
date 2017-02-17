@@ -27,7 +27,7 @@ class Upload extends Controller
      */
     protected function actionDefault()
     {
-        $user = $this->request()->queryRequired('user');
+        $user = $this->request()->attributeRequired('user');
 
         $db = new Database($this->builder);
 
