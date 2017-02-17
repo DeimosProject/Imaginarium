@@ -166,7 +166,7 @@ class Server
                             $config['width'],
                             $config['height'],
                         ],
-                        $config['color']
+                        $config['color'] ?? '#ffffff'
                     );
                     break;
                 case 'contain':
@@ -177,7 +177,7 @@ class Server
                             $config['width'],
                             $config['height'],
                         ],
-                        $config['color']
+                        $config['color'] ?? '#ffffff'
                     );
                     break;
                 case 'cover':
@@ -196,12 +196,12 @@ class Server
 
             if ($this->builder->helper()->dir()->make(dirname($toFile)))
             {
+                // Imagick hack
                 $image->save($toFile . '.png',
                     isset($config['quality']) ?
                         $config['quality'] :
                         null
                 );
-
                 rename($toFile.'.png', $toFile);
 
                 if (!isset($config['optimization']['enable']) || $config['optimization']['enable'])
@@ -259,16 +259,22 @@ class Server
                 'status' => 'error'
             ];
         }
-        // todo: слать 100500 раз, пока нам не пришлютЪ ОК
+
         if ($status === self::STATUS_OK)
         {
+            $file = $this->sdk->getOriginalPath($this->hash);
+            $sizes = getimagesize($file, $info);
+
             $result = [
                 'status' => 'ok',
+                'fileSize' => $this->builder->helper()->file()->size($file),
                 'sizes' => [
-                    'width' => 0,
-                    'height' => 0,
+                    'width' => $sizes[0],
+                    'height' => $sizes[1],
                 ],
-                //'' // more data
+                'user' => $this->user,
+                'mime' => $sizes['mime'] ?? '',
+                'channels' => $sizes['channels'] ?? '',
             ];
         }
 

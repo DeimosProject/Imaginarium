@@ -17,11 +17,11 @@
   ],
   "require": {
     "deimos/controller": "~0.0",
-    "deimos/orm": "^1.0",
+    "deimos/orm": "~2.0",
     "deimos/imaginarium-sdk": "~0.0",
-    "intervention/image": "^2.3",
+    "intervention/image": "~2.3",
     "ps/image-optimizer": "~1.0",
-    "deimos/flow": "^0.4.0"
+    "deimos/flow": "~0.4"
   },
   "autoload": {
     "psr-4": {
