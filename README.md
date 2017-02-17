@@ -14,29 +14,31 @@ chmod 0644 file.db (for sqlite)
 ```
 
 **Callback response examples:**
-```
-[
-    "user": "default",
-    "status": "ok",
-    "time": [
-        "download": "1486643290069",
-        "finish": "1486643290569",
-    },
-    "id": "dAc93x",
-    "size": [
-        "width": 1300,
-         "height": 600
-    ]
-]
+```json
+{
+  "status": "ok",
+  "fileSize": "3402794",
+  "sizes": {
+    "width": "5000",
+    "height": "3125"
+  },
+  "mime": "image\/jpeg",
+  "channels": "3",
+  "hash": "81Xoxt",
+  "user": "default",
+  "data": {
+    "Filename": "far-kray-4-5000x3125-gimalai-gori-shuter-2615.jpg",
+    "Upload": "Submit Query"
+  },
+  "query": {
+    "q": "api\/upload\/default",
+    "id": "452"
+  }
+}
 ```
 
-```
-[
-    "user": "default",
-    "status": "error",
-    "time": [
-        "download": "1486643290069",
-        "finish": "1486643290569",
-    }
-]
+```json
+{
+  "status": "error"
+}
 ```

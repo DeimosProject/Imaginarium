@@ -270,8 +270,7 @@ class Server
                 'status' => 'error'
             ];
         }
-
-        if ($status === self::STATUS_OK)
+        else if ($status === self::STATUS_OK)
         {
             $file  = $this->sdk->getOriginalPath($this->hash);
             $sizes = getimagesize($file, $info);
