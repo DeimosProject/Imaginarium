@@ -6,6 +6,7 @@ use Deimos\Imaginarium\Controller;
 use Deimos\Imaginarium\Server\Database;
 use Deimos\Imaginarium\Server\Server;
 use Deimos\ImaginariumSDK\SDK;
+use Deimos\Request\Request;
 
 class Upload extends Controller
 {
@@ -26,9 +27,9 @@ class Upload extends Controller
      */
     protected function actionDefault()
     {
-        $db = new Database($this->builder);
+        $user = $this->request()->queryRequired('user');
 
-        $user = 'default';
+        $db = new Database($this->builder);
 
         do
         {

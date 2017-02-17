@@ -7,3 +7,4 @@ storage/
 assets/compile/
 assets/config/resizer.php
 file.db
+web/crossdomain.xml

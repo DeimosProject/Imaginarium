@@ -9,7 +9,7 @@ return [
         'resolver' => [
             [
                 'type' => 'pattern',
-                'path' => '<controller>(/<action>)',
+                'path' => '<controller>/<user>',
 
                 'defaults' => [
                     'controller' => 'upload',
@@ -31,11 +31,12 @@ return [
         'resolver' => [
             [
                 'type' => 'pattern',
-                'path' => '(<controller>(/<action>))',
+                'path' => '(<controller>/<user>)',
 
                 'defaults' => [
                     'controller' => 'upload',
                     'action'     => 'default',
+                    'user'       => 'default',
                 ]
             ]
         ],
