@@ -282,6 +282,7 @@ class Server
                     'width'  => $sizes[0],
                     'height' => $sizes[1],
                 ],
+                'hash'     => $this->hash,
                 'user'     => $this->user,
                 'mime'     => $sizes['mime'] ?? '',
                 'channels' => $sizes['channels'] ?? '',
