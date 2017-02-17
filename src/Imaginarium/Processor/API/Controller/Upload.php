@@ -57,7 +57,9 @@ class Upload extends Controller
             return $hash;
         }
 
-        return null;
+        return [
+            'error' => 'Not save image...'
+        ];
     }
 
     /**
