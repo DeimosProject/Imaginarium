@@ -14,7 +14,7 @@ class Database
 
     public function __construct(Builder $builder)
     {
-        $q = 'CREATE TABLE IF NOT EXISTS files (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,user TEXT NOT NULL,file TEXT NOT NULL);';
+        $q = 'CREATE TABLE IF NOT EXISTS files (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,user TEXT NOT NULL,name TEXT NOT NULL);';
         $this->builder = $builder;
 
         $this->builder->database()->exec($q);
@@ -32,7 +32,7 @@ class Database
     public function imageSaveToDb($user, $name)
     {
         $this->builder->orm()
-            ->create('file', ['user' => $user, 'file' => $name]);
+            ->create('file', ['user' => $user, 'name' => $name]);
     }
 
 }
