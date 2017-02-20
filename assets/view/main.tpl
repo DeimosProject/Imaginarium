@@ -52,7 +52,8 @@
             <script src="/js/jquery.modal.js"></script>
             <script>
                 $('#userpic').fileapi({
-                    url: '/api/upload',
+                    url: '/api/upload/default',
+//                    url: 'http://img.localhost/api/upload/default',
                     accept: 'image/*',
                     imageSize: { minWidth: 304, minHeight: 304 },
                     elements: {
