@@ -28,14 +28,17 @@ class Upload extends Controller
     protected function actionDefault()
     {
         
-        if( !empty($_SERVER['HTTP_ORIGIN']) )
-        {
-            // Enable CORS
-            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
-            header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-            header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Range, Content-Disposition, Content-Type');
-            header('Access-Control-Allow-Credentials: true');
-        }
+        // Permitted types of request
+        header('Access-Control-Allow-Methods: POST, OPTIONS');
+
+        // Describe custom headers
+        header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Range, Content-Disposition, Content-Type');
+
+        // A comma-separated list of domains
+        header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+
+        // Allow cookie
+        header('Access-Control-Allow-Credentials: true');
         
         if( $_SERVER['REQUEST_METHOD'] === 'OPTIONS' )
         {
