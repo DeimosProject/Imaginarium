@@ -27,6 +27,7 @@ class Upload extends Controller
      */
     protected function actionDefault()
     {
+        
         if( !empty($_SERVER['HTTP_ORIGIN']) )
         {
             // Enable CORS
@@ -35,7 +36,8 @@ class Upload extends Controller
             header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Range, Content-Disposition, Content-Type');
             header('Access-Control-Allow-Credentials: true');
         }
-        if( $_SERVER['REQUEST_METHOD'] == 'OPTIONS' )
+        
+        if( $_SERVER['REQUEST_METHOD'] === 'OPTIONS' )
         {
             exit();
         }
