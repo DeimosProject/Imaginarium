@@ -1,5 +1,22 @@
 <?php
 
+// MySQL
+//return [
+//    'adapter'  => 'mysql',
+//    'database' => 'cdn',
+//    'username' => 'root',
+//    'password' => 'root'
+//];
+//
+// PostgreSQL
+//return [
+//    'adapter'  => 'pgsql',
+//    'database' => 'cdn',
+//    'username' => 'root',
+//    'password' => 'root'
+//];
+
+// sqlite3
 return [
     'adapter'  => 'sqlite',
     'path'    => dirname(dirname(__DIR__)) . '/file.db',
