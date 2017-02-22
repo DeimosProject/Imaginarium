@@ -11,7 +11,10 @@ mkdir assets/compile
 chmod 0777 assets/compile
 mkdir storage
 chmod 0777 storage
+touch file.db
 chmod 0644 file.db (for sqlite)
+cd assets/config
+for i in *.dist; do cp $i ${i:0:-5}; done    # thanks Sttv (Sergey Zharkov) 
 ```
 
 **Callback response examples:**
