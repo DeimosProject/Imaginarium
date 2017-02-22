@@ -17,6 +17,8 @@ server {
 
     # internal section/
     location @regenerate {
+        internal;
+
         rewrite "^/(.*)$" "/regenerate.php?q=$1" last;
     }
 
