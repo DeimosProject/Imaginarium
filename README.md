@@ -2,8 +2,16 @@
 
 **required**
 ```bash
-php extension gearman
-php extension sqlite (OR mysql)
+apt install php-gearman
+
+# if use sqlite3
+apt install php-sqlite
+
+# if use mysql
+apt install php-mysql
+
+# if use PostgreSQL
+apt install php-pgsql
 ```
 
 ```bash
