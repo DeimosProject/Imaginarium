@@ -13,9 +13,12 @@ mkdir storage
 chmod 0777 storage
 cd assets/config
 for i in *.dist; do cp $i ${i:0:-5}; done    # thanks Sttv (Sergey Zharkov) 
+```
+
+```bash
 # if use SQLite
 touch file.db          
-chmod 0644 file.db 
+chmod 0644 file.db
 ```
 
 **Callback response examples:**
