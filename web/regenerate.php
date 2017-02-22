@@ -23,8 +23,12 @@ if ($_SERVER['USER'] === 'www-data')
     $route = $router->getCurrentRoute($request->query('q'));
 
     $attributes = $route->attributes();
+    $sdk = new Deimos\ImaginariumSDK\SDK();
+    
+    $sdk->setBasedir(dirname(__DIR__) . '/storage');
+    $sdk->setUserName($attributes['user']);
 
-    if (file_exists('../' . $request->query('q')))
+    if (file_exists($sdk->getOriginalPath( $attributes['hash'] )))
     {
         $configObject = $builder->config()->get('gearman');
 
