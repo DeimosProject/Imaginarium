@@ -62,8 +62,13 @@ class Upload extends Controller
 
         if ($this->saveImage())
         {
+            $configObject = $this->builder->config()->get('gearman');
+
             $gearman = new \GearmanClient();
-            $gearman->addServer();
+            $gearman->addServer(
+                $configObject->get('host', '127.0.0.1'),
+                $configObject->get('port', 4730)
+            );
 
             $gearman->doBackground('resize', json_encode([
                 'hash'  => $hash,

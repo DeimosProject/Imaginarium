@@ -5,9 +5,6 @@ composer.lock
 build/
 storage/
 assets/compile/
-assets/config/resizer.php
 file.db
 web/crossdomain.xml
-assets/config/db.php
-assets/config/resizer.php
-assets/config/resolver.php
+assets/config/*.php

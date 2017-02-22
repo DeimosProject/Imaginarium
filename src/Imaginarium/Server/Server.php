@@ -63,7 +63,12 @@ class Server
         $this->builder = $builder;
         $this->user    = $user;
 
-        $this->worker->addServer();
+        $configObject = $builder->config()->get('gearman');
+
+        $this->worker->addServer(
+            $configObject->get('host', '127.0.0.1'),
+            $configObject->get('port', 4730)
+        );
     }
 
     /**
