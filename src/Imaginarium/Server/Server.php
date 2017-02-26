@@ -11,6 +11,7 @@ use Deimos\Imaginarium\ResizeAdapter\None;
 use Deimos\Imaginarium\ResizeAdapter\Resize;
 use Deimos\ImaginariumSDK\SDK;
 use ImageOptimizer\OptimizerFactory;
+use Intervention\Image\ImageManager;
 
 class Server
 {
@@ -277,18 +278,22 @@ class Server
         }
         else if ($status === self::STATUS_OK)
         {
-            $file  = $this->sdk->getOriginalPath($this->hash);
-            $sizes = getimagesize($file, $info);
+            $file = $this->sdk->getOriginalPath($this->hash);
+
+            $this->driver = $this->builder->config()
+                ->get('imageDriver:driver');
+
+            $manager = new ImageManager(['driver' => $this->driver]);
+            $image   = $manager->make($file);
 
             $result = array_merge([
                 'status'   => 'ok',
                 'fileSize' => $this->builder->helper()->file()->size($file),
                 'sizes'    => [
-                    'width'  => $sizes[0],
-                    'height' => $sizes[1],
+                    'width'  => $image->width(),
+                    'height' => $image->height(),
                 ],
-                'mime'     => $sizes['mime'] ?? '',
-                'channels' => $sizes['channels'] ?? '',
+                'mime'     => $image->mime(),
             ], $params);
         }
 
@@ -303,7 +308,7 @@ class Server
                     ->to($callbackConfig['url'] . '?hash=' . $callbackConfig['secret'])
                     ->exec();
             }
-            catch (\Exception $e)
+            catch (\Throwable $e)
             {
                 echo $e->getMessage(), PHP_EOL;
             }
