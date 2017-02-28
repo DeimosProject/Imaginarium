@@ -49,36 +49,52 @@ class Upload extends Controller
 
         $db = new Database($this->builder);
 
-        do
-        {
-            $hash = $this->helper()->str()->random(6);
+        $count = count($this->helper()->uploads()->get('filedata'));
+        $index = 0;
+        $save  = false;
+        $hash  = null;
 
-            $count = $db->imageExist($user, $hash);
+        while ($index < $count)
+        {
+
+            do
+            {
+                $hash = $this->helper()->str()->random(6);
+
+                $count = $db->imageExist($user, $hash);
+            }
+            while ($count);
+
+            $this->user = $user;
+            $this->hash = $hash;
+
+            $save = $this->saveImage($index++);
+
+            if ($save)
+            {
+                $configObject = $this->builder->config()->get('gearman');
+
+                $gearman = new \GearmanClient();
+                $gearman->addServer(
+                    $configObject->get('host', '127.0.0.1'),
+                    $configObject->get('port', 4730)
+                );
+
+                $gearman->doBackground('resize', json_encode([
+                    'hash'  => $hash,
+                    'user'  => $user,
+                    'data'  => $this->request()->data(),
+                    'query' => $this->request()->query()
+                ]));
+
+                $db->imageSaveToDb($user, $hash);
+
+            }
+
         }
-        while ($count);
 
-        $this->user = $user;
-        $this->hash = $hash;
-
-        if ($this->saveImage())
+        if ($save)
         {
-            $configObject = $this->builder->config()->get('gearman');
-
-            $gearman = new \GearmanClient();
-            $gearman->addServer(
-                $configObject->get('host', '127.0.0.1'),
-                $configObject->get('port', 4730)
-            );
-
-            $gearman->doBackground('resize', json_encode([
-                'hash'  => $hash,
-                'user'  => $user,
-                'data'  => $this->request()->data(),
-                'query' => $this->request()->query()
-            ]));
-
-            $db->imageSaveToDb($user, $hash);
-
             return [
                 'hash' => $hash
             ];
@@ -92,7 +108,7 @@ class Upload extends Controller
     /**
      * @return bool
      */
-    protected function saveImage()
+    protected function saveImage($index)
     {
         $sdk = new SDK();
         $sdk->setUserName($this->user);
@@ -101,7 +117,7 @@ class Upload extends Controller
 
         $this->helper()->dir()->make(dirname($path));
 
-        $result = $this->helper()->uploads()->simple('filedata')->save($path);
+        $result = $this->helper()->uploads()->simple('filedata', $index)->save($path);
 
         if ($result)
         {
