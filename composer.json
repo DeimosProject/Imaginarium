@@ -4,7 +4,15 @@
   "keywords": [
     "deimos",
     "project",
-	"imaginarium"
+    "imaginarium",
+    "image",
+    "php",
+    "resize",
+    "crop",
+    "contain",
+    "fill",
+    "gd",
+    "imagick"
   ],
   "homepage": "https://github.com/DeimosProject/Micro",
   "license": "MIT",
