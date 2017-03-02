@@ -27,7 +27,7 @@ test -d "$TMPDIR" || mkdir "$TMPDIR" -p
 if [ ! -d "$TMPDIR" ]
  then
   echo "NOT CREATED!!!!!!!"
-  exit 0
+  exit 1
 fi
 # RUN DAEMONS
 find "$STORAGE"/* -maxdepth 0 -type d | while read i
@@ -52,6 +52,6 @@ if [[ $? = 0 ]]
   rm -r "$TMPDIR"
   exit 0
  else
-  echo "NOR RUN SCREEN!"
+  echo "NOT RUN SCREEN!"
   exit 1
 fi
