@@ -45,4 +45,13 @@ do
     echo "screen -t '$NAME' $COMMAND" >> "$SCREENRC"
 done
 
-screen -c "$SCREENRC" -S imaginarium -d -m && rm -r "$TMPDIR" || echo 'NOR RUN SCREEN!'
+screen -c "$SCREENRC" -S imaginarium -d -m
+if [[ $? = 0 ]]
+ then
+  sleep 1
+  rm -r "$TMPDIR"
+  exit 0
+ else
+  echo "NOR RUN SCREEN!"
+  exit 1
+fi
