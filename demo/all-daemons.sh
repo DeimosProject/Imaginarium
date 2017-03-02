@@ -45,5 +45,5 @@ do
     echo "screen -t '$NAME' $COMMAND" >> "$SCREENRC"
 done
 
-screen -c $SCREENRC -S imaginarium -d -m
+screen -c "$SCREENRC" -S imaginarium -d -m
 rm -r "$TMPDIR"
