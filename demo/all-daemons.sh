@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCREENRC='/dev/shm/screenrc-daemon'
+SCREENRC='/tmp/screenrc/daemon.rc'
 DIR='/PATH/TO/PROJECT/ROOT/DIR'
 PHP='/usr/bin/php'
 LOGDIR='/var/log/imaginarium-daemon'
@@ -14,6 +14,8 @@ LOGDIR='/tmp'
 # /for example only!
 
 STORAGE="$DIR/storage"
+
+mkdir `dirname $SCREENRC -p`
 
 echo -n '' > "$SCREENRC"
 echo 'caption always "%{= 45}%{+b w}Screen: %n | %h %=%t %c"' >> "$SCREENRC"
