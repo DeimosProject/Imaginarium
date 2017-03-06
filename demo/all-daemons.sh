@@ -40,7 +40,7 @@ do
     echo 'while true; do' >> "$COMMAND"
     echo "LOGDIR_=\"$LOGDIR/\`date '+%Y/%m/%d/%H-%M'\`\"" >> "$COMMAND";
     echo "mkdir -p \"\$LOGDIR_\"" >> "$COMMAND"
-    echo "su "$PHPUSER" -s /bin/bash \`\"$PHP\" $DIR/Gearman.php \"$NAME\" >> \"\$LOGDIR_/$NAME.log\"\`" >> "$COMMAND"
+    echo "su "$PHPUSER" -s \"$PHP\" $DIR/Gearman.php \"$NAME\" >> \"\$LOGDIR_/$NAME.log\"" >> "$COMMAND"
     echo 'done' >> "$COMMAND"
     echo "screen -t '$NAME' $COMMAND" >> "$SCREENRC"
 done
@@ -49,7 +49,7 @@ screen -c "$SCREENRC" -S imaginarium -d -m
 if [[ $? = 0 ]]
  then
   sleep 1
-  rm -r "$TMPDIR"
+  #rm -r "$TMPDIR"
   exit 0
  else
   echo "NOT RUN SCREEN!"
