@@ -49,7 +49,7 @@ screen -c "$SCREENRC" -S imaginarium -d -m
 if [[ $? = 0 ]]
  then
   sleep 1
-  #rm -r "$TMPDIR"
+  rm -r "$TMPDIR"
   exit 0
  else
   echo "NOT RUN SCREEN!"
