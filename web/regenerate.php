@@ -7,6 +7,8 @@ use Deimos\Imaginarium\Builder;
 $builder = new Builder(dirname(__DIR__));
 $request = $builder->request();
 
+header("HTTP/1.0 404 Not Found");
+
 if ($_SERVER['USER'] === 'www-data')
 {
 
