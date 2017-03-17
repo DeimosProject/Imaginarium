@@ -20,7 +20,7 @@ if ($_SERVER['USER'] === 'www-data')
     $router->setRoutes([$route]);
     $router->setMethod();
 
-    $route = $router->getCurrentRoute($request->query('q'));
+    $route = $router->getCurrentRoute($request->server('REQUEST_URI'));
 
     $attributes = $route->attributes();
     $sdk = new Deimos\ImaginariumSDK\SDK();
