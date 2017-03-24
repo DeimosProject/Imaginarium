@@ -75,7 +75,7 @@ class Server
     /**
      * @param string $subName
      */
-    public function run($subName = '')
+    public function run($subName)
     {
         $this->worker->addFunction('resize' . $subName, function (\GearmanJob $job)
         {

@@ -12,4 +12,4 @@ $builder = new \Deimos\Imaginarium\Builder(__DIR__);
 
 $gearman = new \Deimos\Imaginarium\Server\Server($builder, $argv[1]);
 
-$gearman->run();
+$gearman->run($argv[1]);

@@ -80,7 +80,7 @@ class Upload extends Controller
                     $configObject->get('port', 4730)
                 );
 
-                $gearman->doBackground('resize', json_encode([
+                $gearman->doBackground('resize' . $user, json_encode([
                     'hash'  => $hash,
                     'user'  => $user,
                     'data'  => $this->request()->data(),
@@ -125,7 +125,7 @@ class Upload extends Controller
 
             if ($serverApi->isImage($path))
             {
-                $serverApi->optimizationImage($path);
+//                $serverApi->optimizationImage($path); // todo
 
                 return true;
             }
