@@ -45,7 +45,7 @@ if ($_SERVER['USER'] === 'www-data')
             $configObject->get('port', 4730)
         );
 
-        $gearman->doBackground('resize', json_encode([
+        $gearman->doBackground('resize' . $attributes['user'], json_encode([
             'hash'  => $attributes['hash'],
             'user'  => $attributes['user'],
             'data'  => $request->data(),
