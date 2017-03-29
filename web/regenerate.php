@@ -14,7 +14,12 @@ if ($_SERVER['USER'] === 'www-data')
 
     $route = [
         'type' => 'pattern',
-        'path' => 'storage/<user>/<type>(/<config>)/<ha>/<sh>/<hash>'
+        'path' => [
+            'storage/<user>/<type>(/<config>)/<ha>/<sh>/<hash>',
+            [
+                'config' => '[\w-А-ЯЁа-яё~]+'
+            ]
+        ]
     ];
 
     $router = new \Deimos\Router\Router();
