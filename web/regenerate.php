@@ -17,7 +17,7 @@ if ($_SERVER['USER'] === 'www-data')
         'path' => [
             'storage/<user>/<type>(/<config>)/<ha>/<sh>/<hash>',
             [
-                'config' => '[\w-А-ЯЁа-яё~]+'
+                'config' => '[\w-А-ЯЁа-яё\~]+'
             ]
         ]
     ];
