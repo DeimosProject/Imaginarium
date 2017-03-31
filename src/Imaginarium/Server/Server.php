@@ -7,6 +7,7 @@ use Deimos\Helper\Exceptions\ExceptionEmpty;
 use Deimos\Imaginarium\Builder;
 use Deimos\Imaginarium\ResizeAdapter\Contain;
 use Deimos\Imaginarium\ResizeAdapter\Cover;
+use Deimos\Imaginarium\ResizeAdapter\Fit;
 use Deimos\Imaginarium\ResizeAdapter\None;
 use Deimos\Imaginarium\ResizeAdapter\Resize;
 use Deimos\ImaginariumSDK\SDK;
@@ -163,20 +164,30 @@ class Server
         {
             switch ($config['type'])
             {
+                case 'inscribe':
+                case 'fit':
+                    $adapter = new Fit();
+                    $adapter->setDriver($this->driver);
+                    $image = $adapter->execute($file, [
+                        $config['width'],
+                        $config['height'],
+                    ]);
+                    break;
+
                 case 'resize':
                 case 'fill':
-                    $fill = new Resize();
-                    $fill->setDriver($this->driver);
-                    $image = $fill->execute($file, [
+                    $adapter = new Resize();
+                    $adapter->setDriver($this->driver);
+                    $image = $adapter->execute($file, [
                         $config['width'],
                         $config['height'],
                     ]);
                     break;
 
                 case 'none':
-                    $fill = new None();
-                    $fill->setDriver($this->driver);
-                    $image = $fill->execute($file,
+                    $adapter = new None();
+                    $adapter->setDriver($this->driver);
+                    $image = $adapter->execute($file,
                         [
                             $config['width'],
                             $config['height'],
@@ -186,9 +197,9 @@ class Server
                     break;
 
                 case 'contain':
-                    $fill = new Contain();
-                    $fill->setDriver($this->driver);
-                    $image = $fill->execute($file,
+                    $adapter = new Contain();
+                    $adapter->setDriver($this->driver);
+                    $image = $adapter->execute($file,
                         [
                             $config['width'],
                             $config['height'],
@@ -198,14 +209,12 @@ class Server
                     break;
 
                 case 'cover':
-                    $fill = new Cover();
-                    $fill->setDriver($this->driver);
-                    $image = $fill->execute($file,
-                        [
-                            $config['width'],
-                            $config['height'],
-                        ]
-                    );
+                    $adapter = new Cover();
+                    $adapter->setDriver($this->driver);
+                    $image = $adapter->execute($file, [
+                        $config['width'],
+                        $config['height'],
+                    ]);
                     break;
 
                 default:
