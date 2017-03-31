@@ -53,7 +53,12 @@ if ($_SERVER['USER'] === 'www-data')
         ]));
 
         $db = new \Deimos\Imaginarium\Server\Database($builder);
-        $db->imageSaveToDb($attributes['user'], $attributes['hash']);
+
+
+        if (!$db->imageExist($attributes['user'], $attributes['hash']))
+        {
+            $db->imageSaveToDb($attributes['user'], $attributes['hash']);
+        }
     }
 
 }
