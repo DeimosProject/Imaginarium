@@ -2,7 +2,7 @@
 
 **required**
 ```bash
-apt install php-gearman
+apt install php-gearman webp
 
 # if use sqlite3
 apt install php-sqlite
