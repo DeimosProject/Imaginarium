@@ -237,6 +237,17 @@ class Server
                     );
                 }
 
+                if (!isset($config['webp']) || $config['webp'])
+                {
+                    @shell_exec(
+                        'cwebp -q 100 "' .
+                        escapeshellcmd($toFile) .
+                        '" -o "' .
+                        escapeshellcmd($toFile) .
+                        '" >> /dev/null'
+                    );
+                }
+
                 return true;
             }
         }
