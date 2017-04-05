@@ -10,7 +10,7 @@ $users = array_diff($users, ['.', '..']);
 
 $sdk = new Deimos\ImaginariumSDK\SDK();
 
-$sdk->setBasedir(dirname(__DIR__) . '/storage');
+$sdk->setBasedir(__DIR__ . '/storage');
 
 foreach ($users as $user)
 {
