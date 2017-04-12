@@ -41,8 +41,8 @@ if ($_SERVER['USER'] === 'www-data')
 
         $gearman = new \GearmanClient();
         $gearman->addServer(
-            $configObject->get('host', '127.0.0.1'),
-            $configObject->get('port', 4730)
+            $configObject->getData('host', '127.0.0.1'),
+            $configObject->getData('port', 4730)
         );
 
         $gearman->doBackground('resize' . $attributes['user'], json_encode([
@@ -63,8 +63,7 @@ if ($_SERVER['USER'] === 'www-data')
 
 }
 
-?>
-<html>
+?><html>
 <head><title>404 Not Found</title></head>
 <body bgcolor="white">
 <center><h1>404 Not Found</h1></center>

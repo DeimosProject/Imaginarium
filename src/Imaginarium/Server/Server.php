@@ -68,8 +68,8 @@ class Server
         $configObject = $builder->config()->get('gearman');
 
         $this->worker->addServer(
-            $configObject->get('host', '127.0.0.1'),
-            $configObject->get('port', 4730)
+            $configObject->getData('host', '127.0.0.1'),
+            $configObject->getData('port', 4730)
         );
     }
 
@@ -93,7 +93,7 @@ class Server
 
             $config = $this->builder->config()
                 ->get('resizer')
-                ->get($this->user);
+                ->getData($this->user);
 
             /**
              * @var ConfigObject

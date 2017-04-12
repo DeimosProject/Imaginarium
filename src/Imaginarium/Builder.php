@@ -121,9 +121,9 @@ class Builder extends \Deimos\Builder\Builder
         return $this->once(function ()
         {
             return new Config(
+                $this->helper(),
                 $this->getRootDir() .
-                'assets/config/',
-                $this
+                'assets/config/'
             );
         }, __METHOD__);
     }
@@ -135,7 +135,7 @@ class Builder extends \Deimos\Builder\Builder
     {
         return $this->once(function ()
         {
-            $resolver = $this->config()->get('resolver')->get();
+            $resolver = $this->config()->get('resolver')->asArray();
 
             $router = new Router();
             $router->setRoutes($resolver);
@@ -162,8 +162,8 @@ class Builder extends \Deimos\Builder\Builder
     {
         return $this->once(function ()
         {
-            $orm = new ORM($this, $this->database());
-            $orm->setConfig($this->config()->get('orm')->get());
+            $orm = new ORM($this->helper(), $this->database());
+            $orm->setConfig($this->config()->get('orm')->asArray());
 
             return $orm;
         }, __METHOD__);

@@ -34,8 +34,8 @@ foreach ($users as $user)
 
             $gearman = new \GearmanClient();
             $gearman->addServer(
-                $configObject->get('host', '127.0.0.1'),
-                $configObject->get('port', 4730)
+                $configObject->getData('host', '127.0.0.1'),
+                $configObject->getData('port', 4730)
             );
 
             $gearman->doBackground('resize' . $user, json_encode([
