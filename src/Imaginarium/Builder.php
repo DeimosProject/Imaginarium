@@ -135,12 +135,9 @@ class Builder extends \Deimos\Builder\Builder
     {
         return $this->once(function ()
         {
-            $resolver = $this->config()->get('resolver')->asArray();
+            $resolver = $this->config()->get('resolver');
 
-            $router = new Router();
-            $router->setRoutes($resolver);
-
-            return $router;
+            return new Router($resolver);
         }, __METHOD__);
     }
 

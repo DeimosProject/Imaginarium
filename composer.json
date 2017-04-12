@@ -20,11 +20,11 @@
   "authors": [
     {
       "name": "rez1dent3",
-      "email": "maksim.babichev95@gmail.com"
+      "email": "info@babichev.net"
     }
   ],
   "require": {
-    "deimos/controller": "~1.0",
+    "deimos/controller": "~2.0",
     "deimos/orm": "~3.0",
     "deimos/imaginarium-sdk": "~0.0",
     "intervention/image": "~2.3",

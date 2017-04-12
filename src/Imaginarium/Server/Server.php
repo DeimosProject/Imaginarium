@@ -2,7 +2,6 @@
 
 namespace Deimos\Imaginarium\Server;
 
-use Deimos\Config\ConfigObject;
 use Deimos\Helper\Exceptions\ExceptionEmpty;
 use Deimos\Imaginarium\Builder;
 use Deimos\Imaginarium\ResizeAdapter\Contain;
@@ -11,6 +10,7 @@ use Deimos\Imaginarium\ResizeAdapter\Fit;
 use Deimos\Imaginarium\ResizeAdapter\None;
 use Deimos\Imaginarium\ResizeAdapter\Resize;
 use Deimos\ImaginariumSDK\SDK;
+use Deimos\Slice\Slice;
 use ImageOptimizer\OptimizerFactory;
 use Intervention\Image\ImageManager;
 
@@ -46,7 +46,7 @@ class Server
     protected $worker;
 
     /**
-     * @var ConfigObject
+     * @var Slice
      */
     protected $config;
 
@@ -96,7 +96,7 @@ class Server
                 ->getData($this->user);
 
             /**
-             * @var ConfigObject
+             * @var Slice
              */
             $this->config = $config;
 

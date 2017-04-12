@@ -22,15 +22,12 @@ if ($_SERVER['USER'] === 'www-data')
         ]
     ];
 
-    $router = new \Deimos\Router\Router();
+    $router = new \Deimos\Router\Router(new \Deimos\Slice\Slice($builder->helper(), [$route]));
 
-    $router->setRoutes([$route]);
-    $router->setMethod();
+    $route = $router->getRoute($request->query('q'));
 
-    $route = $router->getCurrentRoute($request->query('q'));
-
-    $attributes = $route->attributes();
-    $sdk = new Deimos\ImaginariumSDK\SDK();
+    $attributes = $route->getAttributes();
+    $sdk        = new Deimos\ImaginariumSDK\SDK();
     
     $sdk->setBasedir(dirname(__DIR__) . '/storage');
     $sdk->setUserName($attributes['user']);
